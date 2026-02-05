@@ -162,6 +162,9 @@ Built with ❤️ using:
 ```
 bani/
 ├── bani.html           # Main application file
+├── img/                # Logo and favicon
+│   ├── bani.png
+│   └── bani.ico
 ├── lib/                # JavaScript libraries (included)
 │   ├── cytoscape.min.js
 │   ├── html2canvas.min.js
