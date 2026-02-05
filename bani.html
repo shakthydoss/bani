@@ -750,7 +750,7 @@
             </button>
             
             <!-- Hidden file input for loading -->
-            <input type="file" id="fileInput" accept=".smm,.json" style="display: none;">
+            <input type="file" id="fileInput" accept=".bani,.json" style="display: none;">
             
             <div class="header-divider"></div>
             
@@ -1767,7 +1767,7 @@
             
             // Generate filename with timestamp
             const timestamp = new Date().toISOString().slice(0, 10);
-            const filename = `mindmap-${timestamp}.smm`;
+            const filename = `mindmap-${timestamp}.bani`;
             
             const link = document.createElement('a');
             link.href = url;

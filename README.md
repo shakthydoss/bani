@@ -21,7 +21,7 @@ A self-contained, single-file mind mapping application built with vanilla JavaSc
 - **Padding Control**: Compact to large padding options
 
 ### File Operations
-- **Save/Load**: Export mind maps as `.smm` files (JSON format)
+- **Save/Load**: Export mind maps as `.bani` files (JSON format)
 - **Export**: Generate PNG images or PDF documents
 - **Viewport Preservation**: Zoom level and pan position saved with your mind map
 
@@ -76,7 +76,7 @@ python3 -m http.server 8000
 
 ## File Format
 
-Mind maps are saved as `.smm` (SimpleMindMap) files in JSON format:
+Mind maps are saved as `.bani` files in JSON format:
 
 ```json
 {

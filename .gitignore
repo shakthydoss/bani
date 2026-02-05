@@ -30,12 +30,12 @@ Desktop.ini
 *.old
 
 # Mind Map Files (user data - uncomment if you want to ignore saved maps)
-# *.smm
+# *.bani
 
 # Export Files (uncomment if you want to ignore exports)
 # *.pdf
 # *.png
-# mindmap-*.smm
+# mindmap-*.bani
 
 # Node modules (if ever added)
 node_modules/
