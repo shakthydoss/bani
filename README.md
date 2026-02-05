@@ -108,19 +108,20 @@ Mind maps are saved as `.smm` (SimpleMindMap) files in JSON format:
 - **[html2canvas](https://html2canvas.hertzen.com/)** (v1.4.1): Canvas rendering for image export
 - **[jsPDF](https://github.com/parallax/jsPDF)** (v2.5.1): PDF generation
 - **Vanilla JavaScript**: No frameworks or build tools required
-- **Google Fonts**: DM Sans and Instrument Serif
+- **System Fonts**: Uses native OS fonts for optimal offline performance
 
 ## Architecture
 
-Bani is intentionally built as a single HTML file (~2000 lines) containing:
-- Complete CSS styling with design system
-- All JavaScript application logic
-- HTML structure for UI components
+Bani is built for maximum portability and offline use:
+- **Main file**: `bani.html` (~2000 lines) contains all HTML, CSS, and JavaScript
+- **Local libraries**: `lib/` folder contains all JavaScript dependencies
+- **No build process**: Open and run directly in any browser
+- **Fully offline**: Works completely without internet connection
 
 This architecture prioritizes:
-- **Portability**: Share a single file, works anywhere
+- **Portability**: Share the entire folder, works anywhere
 - **Simplicity**: No build process, no package manager
-- **Offline-capable**: All dependencies loaded via CDN
+- **Offline-first**: All dependencies included locally
 
 ## Browser Compatibility
 
@@ -156,6 +157,20 @@ Built with ❤️ using:
 - [DM Sans](https://fonts.google.com/specimen/DM+Sans) and [Instrument Serif](https://fonts.google.com/specimen/Instrument+Serif) fonts
 - Inspiration from classic mind mapping tools
 
+## Project Structure
+
+```
+bani/
+├── bani.html           # Main application file
+├── lib/                # JavaScript libraries (included)
+│   ├── cytoscape.min.js
+│   ├── html2canvas.min.js
+│   └── jspdf.umd.min.js
+├── README.md
+├── LICENSE
+└── .gitignore
+```
+
 ---
 
-**Note**: Bani stores all data locally in files you save. No data is sent to any server, and the application works completely offline (after initial CDN resource loads).
+**Note**: Bani is fully offline and stores all data locally in files you save. No data is sent to any server, and no internet connection is required after downloading the repository.
