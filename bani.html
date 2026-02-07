@@ -1218,14 +1218,14 @@
                     selector: 'node:selected',
                     style: {
                         'border-color': '#3b82f6',
-                        'border-width': 2,
+                        'border-width': 1.5,
                         'box-shadow': '0 0 0 4px rgba(59, 130, 246, 0.2)'
                     }
                 },
                 {
                     selector: 'edge',
                     style: {
-                        'width': 2,
+                        'width': 1,
                         'line-color': '#1a1a2e',
                         'curve-style': 'bezier',
                         'target-arrow-shape': 'none',
@@ -1269,7 +1269,7 @@
                     title: '',
                     description: '',
                     bgColor: '#ffffff',
-                    borderWidth: 2,
+                    borderWidth: 1,
                     borderColor: '#1a1a2e',
                     borderStyle: 'solid',
                     textColor: '#1a1a2e',
@@ -1568,7 +1568,7 @@
                     if (value === 'none') {
                         node.data('borderWidth', 0);
                     } else if (node.data('borderWidth') === 0) {
-                        node.data('borderWidth', 2);
+                        node.data('borderWidth', 1);
                     }
                     break;
                 
@@ -1851,7 +1851,7 @@
          * Create new mind map
          */
         function newMindMap() {
-            if (cy.nodes().length > 1 || (cy.nodes().length === 1 && cy.nodes()[0].data('label') !== 'Central Idea')) {
+            if (cy.nodes().length > 1 || (cy.nodes().length === 1 && cy.nodes()[0].data('label') !== 'New Node')) {
                 if (!confirm('Create a new mind map? Any unsaved changes will be lost.')) {
                     return;
                 }
@@ -1864,7 +1864,7 @@
             // Create initial node
             const centerX = (window.innerWidth - 220) / 2 + 220;
             const centerY = (window.innerHeight - 56) / 2 + 56;
-            createNode(centerX, centerY, 'Central Idea');
+            createNode(centerX, centerY, 'New Node');
             
             // Reset view
             cy.center();
@@ -2055,8 +2055,8 @@
         // ============================================
         const centerX = (window.innerWidth - 220) / 2 + 220; // Account for panel width
         const centerY = (window.innerHeight - 56) / 2 + 56; // Account for header
-        
-        createNode(centerX, centerY, 'Central Idea');
+
+        createNode(centerX, centerY, 'New Node');
         
         // Center the view on the initial node
         setTimeout(() => {

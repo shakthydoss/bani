@@ -1,0 +1,40 @@
+/* ============================================
+   CSS VARIABLES - Cohesive Design System
+   ============================================ */
+:root {
+    /* Colors - Soft, focused palette */
+    --bg-primary: #fafafa;
+    --bg-canvas: #ffffff;
+    --bg-header: rgba(255, 255, 255, 0.85);
+    --text-primary: #1a1a2e;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --border-subtle: #e2e8f0;
+    --border-light: #f1f5f9;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+    /* Node colors */
+    --node-yellow: #fef3c7;
+    --node-red: #fecaca;
+    --node-blue: #dbeafe;
+    --node-green: #d1fae5;
+    --node-white: #ffffff;
+
+    /* Border colors */
+    --border-black: #1a1a2e;
+    --border-red: #ef4444;
+    --border-blue: #3b82f6;
+    --border-green: #22c55e;
+    --border-white: #e2e8f0;
+
+    /* Typography - System fonts for offline support */
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    --font-serif: 'Georgia', 'Times New Roman', 'Iowan Old Style', 'Apple Garamond', 'Baskerville', serif;
+
+    /* Spacing */
+    --header-height: 56px;
+}

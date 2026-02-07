@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bani</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="img/bani.ico">
+
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="styles/variables.css">
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/header.css">
+    <link rel="stylesheet" href="styles/panel.css">
+    <link rel="stylesheet" href="styles/modal.css">
+    <link rel="stylesheet" href="styles/canvas.css">
+
+    <!-- External JavaScript Libraries -->
+    <script src="lib/cytoscape.min.js"></script>
+    <script src="lib/html2canvas.min.js"></script>
+    <script src="lib/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <!-- ============================================
+         HEADER
+         ============================================ -->
+    <header class="header">
+        <h1 class="app-title">
+            <img src="img/bani.png" alt="Bani Logo" class="app-logo">
+            Bani
+        </h1>
+        
+        <div class="header-actions">
+            <button class="header-btn" id="newBtn" title="New Mind Map">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="12" y1="18" x2="12" y2="12"/>
+                    <line x1="9" y1="15" x2="15" y2="15"/>
+                </svg>
+                New
+            </button>
+            
+            <button class="header-btn" id="saveBtn" title="Save Mind Map">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                    <polyline points="17 21 17 13 7 13 7 21"/>
+                    <polyline points="7 3 7 8 15 8"/>
+                </svg>
+                Save
+            </button>
+            
+            <button class="header-btn" id="loadBtn" title="Load Mind Map">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    <line x1="12" y1="11" x2="12" y2="17"/>
+                    <polyline points="9 14 12 11 15 14"/>
+                </svg>
+                Open
+            </button>
+            
+            <!-- Hidden file input for loading -->
+            <input type="file" id="fileInput" accept=".bani,.json" style="display: none;">
+            
+            <div class="header-divider"></div>
+            
+            <div class="export-container">
+                <button class="export-btn" id="exportBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Export
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px; margin-left: -4px;">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+                
+                <div class="export-dropdown" id="exportDropdown">
+                    <button class="export-option" data-export="pdf">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        Export as PDF
+                    </button>
+                    <button class="export-option" data-export="png">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        Export as Image
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+         CANVAS
+         ============================================ -->
+    <div class="canvas-container">
+        <div id="cy"></div>
+    </div>
+
+    <!-- ============================================
+         NODE PANEL (Fixed Left Sidebar)
+         ============================================ -->
+    <nav class="node-panel disabled" id="nodePanel">
+        <div class="node-panel-header">
+            <div class="node-panel-title">Node Options</div>
+            <div class="node-panel-hint" id="panelHint">Select a node to edit</div>
+        </div>
+
+        <!-- Structure Group -->
+        <div class="panel-group">
+            <div class="panel-group-label">Structure</div>
+            <button class="panel-item" data-action="add-child">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <polyline points="19 12 12 19 5 12"/>
+                </svg>
+                Add Child
+            </button>
+            <button class="panel-item" data-action="add-sibling">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Add Sibling
+            </button>
+            <button class="panel-item" data-action="add-parent">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="19" x2="12" y2="5"/>
+                    <polyline points="5 12 12 5 19 12"/>
+                </svg>
+                Add Parent
+            </button>
+        </div>
+
+        <!-- Appearance Group -->
+        <div class="panel-group">
+            <div class="panel-group-label">Appearance</div>
+            
+            <!-- Background Color -->
+            <div class="panel-submenu" data-submenu="bg-color">
+                <button class="panel-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                    </svg>
+                    Background Color
+                </button>
+                <div class="panel-submenu-content">
+                    <button class="panel-item" data-action="bg-color" data-value="#fef3c7">
+                        <span class="color-option"><span class="color-swatch yellow"></span> Yellow</span>
+                    </button>
+                    <button class="panel-item" data-action="bg-color" data-value="#fecaca">
+                        <span class="color-option"><span class="color-swatch red"></span> Red</span>
+                    </button>
+                    <button class="panel-item" data-action="bg-color" data-value="#dbeafe">
+                        <span class="color-option"><span class="color-swatch blue"></span> Blue</span>
+                    </button>
+                    <button class="panel-item" data-action="bg-color" data-value="#d1fae5">
+                        <span class="color-option"><span class="color-swatch green"></span> Green</span>
+                    </button>
+                    <button class="panel-item" data-action="bg-color" data-value="#ffffff">
+                        <span class="color-option"><span class="color-swatch white"></span> White</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Border Color -->
+            <div class="panel-submenu" data-submenu="border-color">
+                <button class="panel-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    </svg>
+                    Border Color
+                </button>
+                <div class="panel-submenu-content">
+                    <button class="panel-item" data-action="border-color" data-value="#1a1a2e">
+                        <span class="color-option"><span class="color-swatch black"></span> Black</span>
+                    </button>
+                    <button class="panel-item" data-action="border-color" data-value="#ef4444">
+                        <span class="color-option"><span class="color-swatch red"></span> Red</span>
+                    </button>
+                    <button class="panel-item" data-action="border-color" data-value="#3b82f6">
+                        <span class="color-option"><span class="color-swatch blue"></span> Blue</span>
+                    </button>
+                    <button class="panel-item" data-action="border-color" data-value="#22c55e">
+                        <span class="color-option"><span class="color-swatch green"></span> Green</span>
+                    </button>
+                    <button class="panel-item" data-action="border-color" data-value="#e2e8f0">
+                        <span class="color-option"><span class="color-swatch white"></span> White</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Border Size -->
+            <div class="panel-submenu" data-submenu="border-size">
+                <button class="panel-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                    </svg>
+                    Border Size
+                </button>
+                <div class="panel-submenu-content">
+                    <button class="panel-item" data-action="border-size" data-value="1">Thin</button>
+                    <button class="panel-item" data-action="border-size" data-value="2">Medium</button>
+                    <button class="panel-item" data-action="border-size" data-value="4">Thick</button>
+                    <button class="panel-item" data-action="border-size" data-value="0">None</button>
+                </div>
+            </div>
+
+            <!-- Border Style -->
+            <div class="panel-submenu" data-submenu="border-style">
+                <button class="panel-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                    </svg>
+                    Border Style
+                </button>
+                <div class="panel-submenu-content">
+                    <button class="panel-item" data-action="border-style" data-value="solid">Solid</button>
+                    <button class="panel-item" data-action="border-style" data-value="dotted">Dotted</button>
+                    <button class="panel-item" data-action="border-style" data-value="dashed">Dashed</button>
+                    <button class="panel-item" data-action="border-style" data-value="none">None</button>
+                </div>
+            </div>
+
+            <!-- Text Color -->
+            <div class="panel-submenu" data-submenu="text-color">
+                <button class="panel-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4 7 4 4 20 4 20 7"/>
+                        <line x1="9" y1="20" x2="15" y2="20"/>
+                        <line x1="12" y1="4" x2="12" y2="20"/>
+                    </svg>
+                    Text Color
+                </button>
+                <div class="panel-submenu-content">
+                    <button class="panel-item" data-action="text-color" data-value="#1a1a2e">
+                        <span class="color-option"><span class="color-swatch black"></span> Black</span>
+                    </button>
+                    <button class="panel-item" data-action="text-color" data-value="#ef4444">
+                        <span class="color-option"><span class="color-swatch red"></span> Red</span>
+                    </button>
+                    <button class="panel-item" data-action="text-color" data-value="#3b82f6">
+                        <span class="color-option"><span class="color-swatch blue"></span> Blue</span>
+                    </button>
+                    <button class="panel-item" data-action="text-color" data-value="#22c55e">
+                        <span class="color-option"><span class="color-swatch green"></span> Green</span>
+                    </button>
+                    <button class="panel-item" data-action="text-color" data-value="#ffffff">
+                        <span class="color-option"><span class="color-swatch white"></span> White</span>
+                    </button>
+                    <button class="panel-item" data-action="text-color" data-value="#8b5cf6">
+                        <span class="color-option"><span class="color-swatch purple"></span> Purple</span>
+                    </button>
+                    <button class="panel-item" data-action="text-color" data-value="#f97316">
+                        <span class="color-option"><span class="color-swatch orange"></span> Orange</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Text Size -->
+            <div class="panel-submenu" data-submenu="text-size">
+                <button class="panel-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 20h4l9-13a1.5 1.5 0 0 0-2-2L6 14v4z"/>
+                        <path d="M13.5 6.5l2 2"/>
+                    </svg>
+                    Text Size
+                </button>
+                <div class="panel-submenu-content">
+                    <button class="panel-item" data-action="text-size" data-value="11">Small</button>
+                    <button class="panel-item" data-action="text-size" data-value="14">Medium</button>
+                    <button class="panel-item" data-action="text-size" data-value="18">Large</button>
+                    <button class="panel-item" data-action="text-size" data-value="24">Extra Large</button>
+                </div>
+            </div>
+
+            <!-- Text Style -->
+            <div class="panel-submenu" data-submenu="text-style">
+                <button class="panel-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+                        <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+                    </svg>
+                    Text Style
+                </button>
+                <div class="panel-submenu-content">
+                    <button class="panel-item" data-action="text-weight" data-value="400">Normal</button>
+                    <button class="panel-item" data-action="text-weight" data-value="600">Bold</button>
+                    <button class="panel-item" data-action="text-style" data-value="normal">Regular</button>
+                    <button class="panel-item" data-action="text-style" data-value="italic">Italic</button>
+                </div>
+            </div>
+
+            <!-- Padding -->
+            <div class="panel-submenu" data-submenu="padding">
+                <button class="panel-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <rect x="7" y="7" width="10" height="10" rx="1"/>
+                    </svg>
+                    Padding
+                </button>
+                <div class="panel-submenu-content">
+                    <button class="panel-item" data-action="padding" data-value="6">Compact</button>
+                    <button class="panel-item" data-action="padding" data-value="10">Small</button>
+                    <button class="panel-item" data-action="padding" data-value="14">Medium</button>
+                    <button class="panel-item" data-action="padding" data-value="20">Large</button>
+                    <button class="panel-item" data-action="padding" data-value="0">No Padding</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Group -->
+        <div class="panel-group">
+            <div class="panel-group-label">Actions</div>
+            <button class="panel-item" data-action="add-description" id="addDescBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="17" y1="10" x2="3" y2="10"/>
+                    <line x1="21" y1="6" x2="3" y2="6"/>
+                    <line x1="21" y1="14" x2="3" y2="14"/>
+                    <line x1="17" y1="18" x2="3" y2="18"/>
+                </svg>
+                Add Description
+            </button>
+            <button class="panel-item" data-action="edit-description" id="editDescBtn" style="display: none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit Description
+            </button>
+            <button class="panel-item" data-action="delete-description" id="deleteDescBtn" style="display: none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="17" y1="10" x2="3" y2="10"/>
+                    <line x1="21" y1="6" x2="3" y2="6"/>
+                    <line x1="21" y1="14" x2="3" y2="14"/>
+                    <line x1="17" y1="18" x2="3" y2="18"/>
+                </svg>
+                Remove Description
+            </button>
+            <button class="panel-item danger" data-action="delete-node">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+                Delete Node
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============================================
+         CANVAS CONTEXT MENU (for adding nodes on empty canvas)
+         ============================================ -->
+    <div class="canvas-context-menu" id="canvasContextMenu">
+        <button class="canvas-menu-item" data-action="add-node">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="16"/>
+                <line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+            Add Node
+        </button>
+    </div>
+
+    <!-- ============================================
+         INLINE TEXT EDITOR
+         ============================================ -->
+    <div class="inline-editor" id="inlineEditor">
+        <textarea id="editorTextarea" rows="2"></textarea>
+    </div>
+
+    <!-- ============================================
+         DESCRIPTION MODAL
+         ============================================ -->
+    <div class="modal-overlay" id="descriptionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Node Description</h3>
+                <button class="modal-close" id="modalClose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label class="modal-label">Title</label>
+                <input type="text" class="modal-input" id="descriptionTitle" placeholder="Node title...">
+                <label class="modal-label">Description</label>
+                <textarea class="modal-textarea" id="descriptionText" rows="5" placeholder="Enter description (supports multiple lines)..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" id="modalCancel">Cancel</button>
+                <button class="modal-btn modal-btn-save" id="modalSave">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         HELPER TEXT
+         ============================================ -->
+    <div class="helper-text">
+        <kbd>Ctrl+S</kbd> save • <kbd>Ctrl+O</kbd> open • <kbd>Double-click</kbd> edit • <kbd>Right-click</kbd> add
+    </div>
+
+    <!-- ============================================
+         ZOOM CONTROLS
+         ============================================ -->
+    <div class="zoom-controls">
+        <button class="zoom-btn" id="zoomIn" title="Zoom In">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="11" y1="8" x2="11" y2="14"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+            </svg>
+        </button>
+        <button class="zoom-btn" id="zoomOut" title="Zoom Out">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+            </svg>
+        </button>
+        <button class="zoom-btn" id="zoomFit" title="Fit All">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Main Application (ES6 Module) -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
