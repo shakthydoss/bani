@@ -4,6 +4,8 @@
  * Manages the left sidebar panel interactions and node styling.
  */
 
+import { markUnsaved } from '../core/state.js';
+
 export class PanelManager {
     constructor(cy, state, nodeManager, modalManager) {
         this.cy = cy;
@@ -79,14 +81,17 @@ export class PanelManager {
 
             case 'bg-color':
                 node.data('bgColor', value);
+                markUnsaved();
                 break;
 
             case 'border-color':
                 node.data('borderColor', value);
+                markUnsaved();
                 break;
 
             case 'border-size':
                 node.data('borderWidth', parseInt(value));
+                markUnsaved();
                 break;
 
             case 'border-style':
@@ -96,26 +101,32 @@ export class PanelManager {
                 } else if (node.data('borderWidth') === 0) {
                     node.data('borderWidth', 1);
                 }
+                markUnsaved();
                 break;
 
             case 'text-color':
                 node.data('textColor', value);
+                markUnsaved();
                 break;
 
             case 'text-size':
                 node.data('fontSize', parseInt(value));
+                markUnsaved();
                 break;
 
             case 'text-weight':
                 node.data('fontWeight', parseInt(value));
+                markUnsaved();
                 break;
 
             case 'text-style':
                 node.data('fontStyle', value);
+                markUnsaved();
                 break;
 
             case 'padding':
                 node.data('padding', parseInt(value));
+                markUnsaved();
                 break;
 
             case 'add-description':

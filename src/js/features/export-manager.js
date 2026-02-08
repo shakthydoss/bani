@@ -6,12 +6,14 @@
 
 import { EXPORT_CONFIG } from '../config/constants.js';
 import { hideAllMenus } from '../utils/helpers.js';
+import { FileAdapter } from '../../../electron-adapter/file-adapter.js';
 
 export class ExportManager {
     constructor(cy) {
         this.cy = cy;
         this.exportBtn = document.getElementById('exportBtn');
         this.exportDropdown = document.getElementById('exportDropdown');
+        this.fileAdapter = new FileAdapter();
 
         this.setupEventHandlers();
     }
@@ -44,6 +46,20 @@ export class ExportManager {
                 this.exportDropdown.classList.remove('active');
             }
         });
+
+        // Electron menu event handlers
+        if (this.fileAdapter.isElectron && window.electronAPI) {
+            window.electronAPI.onMenuAction((action) => {
+                switch (action) {
+                    case 'export-png':
+                        this.exportToPNG();
+                        break;
+                    case 'export-pdf':
+                        this.exportToPDF();
+                        break;
+                }
+            });
+        }
     }
 
     /**
@@ -51,9 +67,12 @@ export class ExportManager {
      */
     async exportToPNG() {
         try {
-            // Create a PNG blob from Cytoscape
+            // In Electron, use base64uri for better compatibility
+            // In browser, use blob for efficiency
+            const outputType = this.fileAdapter.isElectron ? 'base64uri' : 'blob';
+
             const pngData = this.cy.png({
-                output: 'blob',
+                output: outputType,
                 full: true,
                 scale: EXPORT_CONFIG.PNG.scale,
                 bg: EXPORT_CONFIG.PNG.bg,
@@ -61,18 +80,13 @@ export class ExportManager {
                 maxHeight: EXPORT_CONFIG.PNG.maxHeight
             });
 
-            // Download the image
-            const url = URL.createObjectURL(pngData);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'mindmap.png';
-            link.click();
-            URL.revokeObjectURL(url);
-
-            console.log('✓ Exported to PNG');
+            const success = await this.fileAdapter.saveImage(pngData, 'mindmap.png');
+            if (success) {
+                console.log('✓ Exported to PNG');
+            }
         } catch (err) {
             console.error('Failed to export PNG:', err);
-            alert('Failed to export to PNG');
+            await this.fileAdapter.alert('Failed to export to PNG', 'error');
         }
     }
 
@@ -110,13 +124,17 @@ export class ExportManager {
             // Add the image to PDF
             pdf.addImage(pngData, 'PNG', 50, 50, width - 100, height - 100);
 
-            // Save the PDF
-            pdf.save('mindmap.pdf');
+            // Get PDF as blob
+            const pdfBlob = pdf.output('blob');
 
-            console.log('✓ Exported to PDF');
+            // Save using adapter
+            const success = await this.fileAdapter.savePDF(pdfBlob, 'mindmap.pdf');
+            if (success) {
+                console.log('✓ Exported to PDF');
+            }
         } catch (err) {
             console.error('Failed to export PDF:', err);
-            alert('Failed to export to PDF');
+            await this.fileAdapter.alert('Failed to export to PDF', 'error');
         }
     }
 }

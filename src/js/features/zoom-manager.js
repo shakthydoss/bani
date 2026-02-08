@@ -25,6 +25,23 @@ export class ZoomManager {
         document.getElementById('zoomFit').addEventListener('click', () => {
             this.zoomFit();
         });
+
+        // Electron menu event handlers
+        if (window.electronAPI) {
+            window.electronAPI.onMenuAction((action) => {
+                switch (action) {
+                    case 'zoom-in':
+                        this.zoomIn();
+                        break;
+                    case 'zoom-out':
+                        this.zoomOut();
+                        break;
+                    case 'zoom-fit':
+                        this.zoomFit();
+                        break;
+                }
+            });
+        }
     }
 
     zoomIn() {

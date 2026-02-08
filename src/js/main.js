@@ -5,7 +5,7 @@
  */
 
 // Core modules
-import { state, initState, updateClickPosition } from './core/state.js';
+import { state, initState, updateClickPosition, markSaved, markUnsaved } from './core/state.js';
 import { initCytoscape } from './config/cytoscape-config.js';
 
 // Feature modules
@@ -16,6 +16,7 @@ import { InlineEditor } from './features/inline-editor.js';
 import { ModalManager } from './features/modal-manager.js';
 import { FileManager } from './features/file-manager.js';
 import { ExportManager } from './features/export-manager.js';
+import { StatusBarManager } from './features/status-bar-manager.js';
 
 /**
  * Application class
@@ -33,7 +34,8 @@ class BaniApp {
         this.modalManager = new ModalManager(this.cy, this.nodeManager);
         this.panelManager = new PanelManager(this.cy, state, this.nodeManager, this.modalManager);
         this.inlineEditor = new InlineEditor(this.cy);
-        this.fileManager = new FileManager(this.cy, state, this.nodeManager, this.panelManager);
+        this.statusBarManager = new StatusBarManager(state);
+        this.fileManager = new FileManager(this.cy, state, this.nodeManager, this.panelManager, this.statusBarManager);
         this.exportManager = new ExportManager(this.cy);
         this.zoomManager = new ZoomManager(this.cy);
 
@@ -49,6 +51,11 @@ class BaniApp {
         setTimeout(() => {
             this.cy.center();
         }, 100);
+
+        // Mark as saved after initial setup (initial node doesn't count as unsaved)
+        setTimeout(() => {
+            markSaved();
+        }, 200);
 
         // Expose to window for debugging
         window.bani = {
@@ -111,6 +118,20 @@ class BaniApp {
                 updateClickPosition(e.position.x, e.position.y);
                 this.showCanvasMenu(e.originalEvent.clientX, e.originalEvent.clientY);
             }
+        });
+
+        // Track node position changes (drag)
+        this.cy.on('dragfree', 'node', (e) => {
+            markUnsaved();
+        });
+
+        // Track viewport changes (pan/zoom) - debounced
+        let viewportTimeout;
+        this.cy.on('viewport', () => {
+            clearTimeout(viewportTimeout);
+            viewportTimeout = setTimeout(() => {
+                markUnsaved();
+            }, 1000); // Debounce viewport changes by 1 second
         });
     }
 

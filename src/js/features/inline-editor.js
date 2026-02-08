@@ -4,6 +4,8 @@
  * Handles inline text editing for nodes.
  */
 
+import { markUnsaved } from '../core/state.js';
+
 export class InlineEditor {
     constructor(cy) {
         this.cy = cy;
@@ -73,7 +75,12 @@ export class InlineEditor {
     hide(save = true) {
         if (save && this.editingNode) {
             const newLabel = this.editorTextarea.value.trim() || 'Node';
-            this.editingNode.data('label', newLabel);
+            const oldLabel = this.editingNode.data('label');
+
+            if (newLabel !== oldLabel) {
+                this.editingNode.data('label', newLabel);
+                markUnsaved();
+            }
         }
         this.inlineEditor.classList.remove('active');
         this.editingNode = null;

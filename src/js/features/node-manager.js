@@ -4,7 +4,7 @@
  * Handles all node-related operations: creation, deletion, updates.
  */
 
-import { getNextNodeId } from '../core/state.js';
+import { getNextNodeId, markUnsaved } from '../core/state.js';
 import { DEFAULT_NODE, NODE_OFFSETS } from '../config/constants.js';
 
 export class NodeManager {
@@ -41,6 +41,9 @@ export class NodeManager {
                 }
             });
         }
+
+        // Mark as unsaved
+        markUnsaved();
 
         return node;
     }
@@ -102,6 +105,7 @@ export class NodeManager {
      */
     deleteNode(node) {
         node.remove();
+        markUnsaved();
     }
 
     /**
@@ -116,6 +120,8 @@ export class NodeManager {
         } else {
             node.data('label', title);
         }
+
+        markUnsaved();
     }
 
     /**

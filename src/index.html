@@ -407,6 +407,36 @@
     </div>
 
     <!-- ============================================
+         FILENAME PROMPT MODAL (Browser Mode)
+         ============================================ -->
+    <div class="modal-overlay" id="filenameModal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3 class="modal-title">Save Mind Map</h3>
+            </div>
+            <div class="modal-body">
+                <label class="modal-label">Filename</label>
+                <input type="text" class="modal-input" id="filenameInput" placeholder="Enter filename...">
+                <p class="modal-hint">Only letters, numbers, hyphens (-) and underscores (_) are allowed. The .bani extension will be added automatically.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" id="filenameCancel">Cancel</button>
+                <button class="modal-btn modal-btn-save" id="filenameSave">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         STATUS BAR
+         ============================================ -->
+    <div class="status-bar" id="statusBar">
+        <span class="status-filename" id="statusFilename">untitled.bani</span>
+        <span class="status-unsaved" id="statusUnsaved" style="display: none;">
+            <span class="status-dot">●</span> Unsaved changes
+        </span>
+    </div>
+
+    <!-- ============================================
          HELPER TEXT
          ============================================ -->
     <div class="helper-text">

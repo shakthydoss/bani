@@ -1,0 +1,96 @@
+{
+  "name": "bani",
+  "version": "1.0.0",
+  "description": "A fully offline mind mapping desktop application",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --enable-logging",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux"
+  },
+  "keywords": [
+    "mindmap",
+    "mind-mapping",
+    "offline",
+    "desktop",
+    "electron"
+  ],
+  "author": "Bani Team",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^40.2.1",
+    "electron-builder": "^24.9.0"
+  },
+  "build": {
+    "appId": "com.bani.mindmap",
+    "productName": "Bani",
+    "copyright": "Copyright © 2026 Bani Team",
+    "files": [
+      "src/**/*",
+      "electron/**/*",
+      "electron-adapter/**/*",
+      "!**/*.md",
+      "!**/node_modules/**"
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "build/icons/icon.icns",
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "hardenedRuntime": true
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icons/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Office",
+      "icon": "build/icons/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

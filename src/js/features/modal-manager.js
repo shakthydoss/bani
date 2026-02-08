@@ -4,6 +4,8 @@
  * Handles the description modal for nodes.
  */
 
+import { markUnsaved } from '../core/state.js';
+
 export class ModalManager {
     constructor(cy, nodeManager) {
         this.cy = cy;
@@ -112,6 +114,7 @@ export class ModalManager {
             this.descriptionNode.data('label', title);
             this.descriptionNode.data('title', '');
             this.descriptionNode.data('description', '');
+            markUnsaved();
         }
 
         this.hide();
@@ -125,5 +128,6 @@ export class ModalManager {
         node.data('label', title);
         node.data('title', '');
         node.data('description', '');
+        markUnsaved();
     }
 }

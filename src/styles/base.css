@@ -19,3 +19,40 @@ body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
 }
+
+/* ============================================
+   STATUS BAR
+   ============================================ */
+.status-bar {
+    position: fixed;
+    bottom: 40px; /* Above helper text */
+    left: 220px; /* After panel */
+    right: 0;
+    height: 32px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    z-index: 5;
+}
+
+.status-filename {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.status-unsaved {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--orange);
+}
+
+.status-dot {
+    font-size: 16px;
+    line-height: 1;
+}
