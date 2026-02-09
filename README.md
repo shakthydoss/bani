@@ -6,6 +6,13 @@ A fully offline, cross-platform mind mapping application built with vanilla Java
 ![ES6 Modules](https://img.shields.io/badge/architecture-modular-green)
 ![Electron](https://img.shields.io/badge/platform-electron-47848f)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen)
+![Open Source](https://img.shields.io/badge/open%20source-free-orange)
+
+## About Bani
+
+**Bani is a lightweight, open-source mind mapping tool that's completely free to use.** Designed for educators, professionals, students, and researchers, Bani helps you organize ideas and capture what you've learned in intuitive visual maps.
+
+Whether you're brainstorming a new project, planning a lesson, studying for exams, or conducting research, Bani provides a simple yet powerful canvas to structure your thoughts and knowledge.
 
 ## Features
 
@@ -21,6 +28,21 @@ A fully offline, cross-platform mind mapping application built with vanilla Java
 - 🖱️ **Intuitive UI** - Click, double-click, right-click interactions
 - 🔍 **Zoom Controls** - Pan and zoom your mind maps
 - 🌐 **Browser Support** - Also works directly in browser (no installation needed)
+
+## Who is Bani for?
+
+**Bani is designed for anyone who thinks visually:**
+
+- 👩‍🏫 **Educators** - Create lesson plans, organize course materials, and visualize curriculum structures
+- 💼 **Professionals** - Brainstorm projects, plan workflows, and organize business strategies
+- 🎓 **Students** - Take visual notes, map out study materials, and prepare for presentations
+- 🔬 **Researchers** - Structure research ideas, map literature reviews, and organize complex concepts
+
+**Key Benefits:**
+- 📦 **Lightweight** - Fast startup, minimal resource usage
+- 🆓 **Free & Open Source** - No subscriptions, no hidden costs, community-driven
+- 🔒 **Privacy First** - All data stays on your device, no cloud upload required
+- 🚀 **Simple & Powerful** - Easy to learn, flexible enough for complex projects
 
 ## Quick Start
 
@@ -230,7 +252,7 @@ Requires ES6 module support (all modern browsers since 2018).
 
 ## Contributing
 
-Contributions are welcome! The modular architecture makes it easy to add new features:
+Contributions are welcome! **Bani is open source** and the modular architecture makes it easy to add new features:
 
 1. Fork the repository
 2. Create a feature module in `src/js/features/`
@@ -238,10 +260,14 @@ Contributions are welcome! The modular architecture makes it easy to add new fea
 4. Test in browser
 5. Submit a pull request
 
+We appreciate all contributions - whether it's fixing bugs, adding features, improving documentation, or sharing feedback!
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
+**Bani is free and open source software.** You're free to use it for personal, educational, or commercial purposes.
+
 ---
 
-**Note**: Bani is fully offline and stores all data locally in files you save. No data is sent to any server, and no internet connection is required after downloading the repository.
+**Privacy & Offline-First**: Bani is fully offline and stores all data locally in files you save. No data is sent to any server, no analytics tracking, and no internet connection is required after installation. Your mind maps are yours alone.
