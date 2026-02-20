@@ -129,6 +129,33 @@ function buildMenu(mainWindow) {
           }
         },
         { type: 'separator' },
+        {
+          label: 'Layout Mode',
+          submenu: [
+            {
+              label: 'Free-Form',
+              accelerator: 'CmdOrCtrl+Shift+1',
+              click: () => {
+                mainWindow.webContents.send('menu:action', 'layout-freeform');
+              }
+            },
+            {
+              label: 'Hierarchy',
+              accelerator: 'CmdOrCtrl+Shift+2',
+              click: () => {
+                mainWindow.webContents.send('menu:action', 'layout-hierarchy');
+              }
+            },
+            {
+              label: 'Radial',
+              accelerator: 'CmdOrCtrl+Shift+3',
+              click: () => {
+                mainWindow.webContents.send('menu:action', 'layout-radial');
+              }
+            }
+          ]
+        },
+        { type: 'separator' },
         { role: 'reload' },
         { role: 'forceReload' },
         { role: 'toggleDevTools' },

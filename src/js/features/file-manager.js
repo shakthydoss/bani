@@ -120,6 +120,7 @@ export class FileManager {
         return {
             version: FILE_VERSION,
             created: new Date().toISOString(),
+            layoutMode: this.state.currentLayoutMode || 'free-form',
             viewport: {
                 zoom: this.cy.zoom(),
                 pan: this.cy.pan()
@@ -201,8 +202,17 @@ export class FileManager {
             // Reset node counter
             this.state.nodeIdCounter = 0;
 
-            // Add nodes
+            // Restore layout mode (with backward compatibility)
+            const layoutMode = mindmap.layoutMode || 'free-form';
+            this.state.currentLayoutMode = layoutMode;
+
+            // Add nodes (with backward compatibility for layoutDirection)
             mindmap.nodes.forEach(nodeData => {
+                // Ensure layoutDirection exists (default to 'down' if missing)
+                if (!nodeData.data.layoutDirection) {
+                    nodeData.data.layoutDirection = 'down';
+                }
+
                 this.cy.add({
                     group: 'nodes',
                     data: nodeData.data,
@@ -232,6 +242,26 @@ export class FileManager {
                 this.cy.fit(this.cy.elements(), 50);
             }
 
+            // Apply dragging state based on layout mode
+            if (window.bani && window.bani.layoutManager) {
+                if (layoutMode === 'free-form') {
+                    window.bani.layoutManager.setDraggingEnabled(true);
+                } else {
+                    window.bani.layoutManager.setDraggingEnabled(false);
+                }
+
+                // Update UI label
+                const layoutModeLabel = document.getElementById('layoutModeLabel');
+                if (layoutModeLabel) {
+                    const modeNames = {
+                        'free-form': 'Free-Form',
+                        'hierarchy': 'Hierarchy',
+                        'radial': 'Radial'
+                    };
+                    layoutModeLabel.textContent = modeNames[layoutMode] || 'Free-Form';
+                }
+            }
+
             // Reset panel
             this.panelManager.disablePanel();
 
@@ -245,7 +275,7 @@ export class FileManager {
             }
             markSaved();
 
-            console.log('✓ Mind map loaded successfully');
+            console.log(`✓ Mind map loaded successfully (Layout mode: ${layoutMode})`);
             return true;
         } catch (err) {
             console.error('Failed to load mind map:', err);

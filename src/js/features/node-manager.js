@@ -8,9 +8,10 @@ import { getNextNodeId, markUnsaved } from '../core/state.js';
 import { DEFAULT_NODE, NODE_OFFSETS } from '../config/constants.js';
 
 export class NodeManager {
-    constructor(cy, state) {
+    constructor(cy, state, layoutManager = null) {
         this.cy = cy;
         this.state = state;
+        this.layoutManager = layoutManager;
     }
 
     /**
@@ -51,14 +52,40 @@ export class NodeManager {
     /**
      * Add a child node to the selected node
      */
-    addChild(node) {
-        const pos = node.position();
-        return this.createNode(
-            pos.x,
-            pos.y + NODE_OFFSETS.CHILD_Y,
-            'Child Node',
-            node.id()
-        );
+    addChild(node, direction = 'down') {
+        if (this.layoutManager) {
+            const position = this.layoutManager.calculateChildPosition(node, direction);
+            const newNode = this.createNode(
+                position.x,
+                position.y,
+                'Child Node',
+                node.id()
+            );
+
+            // Store direction in node data
+            newNode.data('layoutDirection', direction);
+
+            // Notify layout manager of child addition (for radial mode)
+            this.layoutManager.onChildAdded(node);
+
+            return newNode;
+        } else {
+            // Fallback to default behavior
+            const pos = node.position();
+            return this.createNode(
+                pos.x,
+                pos.y + NODE_OFFSETS.CHILD_Y,
+                'Child Node',
+                node.id()
+            );
+        }
+    }
+
+    /**
+     * Add a child node with specific direction (for hierarchy mode)
+     */
+    addChildWithDirection(node, direction) {
+        return this.addChild(node, direction);
     }
 
     /**
@@ -104,6 +131,11 @@ export class NodeManager {
      * Delete a node
      */
     deleteNode(node) {
+        // Notify layout manager before deletion (for auto-repositioning)
+        if (this.layoutManager) {
+            this.layoutManager.onNodeDeleted(node);
+        }
+
         node.remove();
         markUnsaved();
     }

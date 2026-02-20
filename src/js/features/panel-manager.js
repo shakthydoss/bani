@@ -17,6 +17,7 @@ export class PanelManager {
         this.addDescBtn = document.getElementById('addDescBtn');
         this.editDescBtn = document.getElementById('editDescBtn');
         this.deleteDescBtn = document.getElementById('deleteDescBtn');
+        this.addChildSubmenu = document.getElementById('addChildSubmenu');
 
         this.setupEventHandlers();
     }
@@ -31,7 +32,7 @@ export class PanelManager {
             if (!item || !this.state.selectedNode || this.panel.classList.contains('disabled')) return;
 
             const action = item.dataset.action;
-            const value = item.dataset.value;
+            const value = item.dataset.value || item.dataset.direction;  // Support both value and direction
             const node = this.state.selectedNode;
 
             this.handleAction(action, value, node);
@@ -62,7 +63,9 @@ export class PanelManager {
     handleAction(action, value, node) {
         switch (action) {
             case 'add-child': {
-                const newNode = this.nodeManager.addChild(node);
+                // Get direction from data-direction attribute (for hierarchy mode)
+                const direction = value || 'down';
+                const newNode = this.nodeManager.addChild(node, direction);
                 this.enablePanel(newNode);
                 break;
             }
@@ -185,5 +188,24 @@ export class PanelManager {
         document.querySelectorAll('.panel-submenu.expanded').forEach(submenu => {
             submenu.classList.remove('expanded');
         });
+    }
+
+    /**
+     * Update panel based on layout mode
+     */
+    updateLayoutMode(mode) {
+        if (mode === 'hierarchy') {
+            // Show directional submenu in hierarchy mode
+            if (this.addChildSubmenu) {
+                this.addChildSubmenu.style.display = 'block';
+            }
+        } else {
+            // In free-form or radial mode, hide submenu (keep simple button)
+            // Actually, we'll keep the submenu structure but make it work as simple button
+            // by not expanding it automatically
+            if (this.addChildSubmenu) {
+                this.addChildSubmenu.classList.remove('expanded');
+            }
+        }
     }
 }

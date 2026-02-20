@@ -18,7 +18,8 @@ export const DEFAULT_NODE = {
     fontSize: 14,
     fontWeight: 400,
     fontStyle: 'normal',
-    padding: 14
+    padding: 14,
+    layoutDirection: 'down'
 };
 
 // Node positioning offsets
@@ -58,4 +59,43 @@ export const FILE_VERSION = '1.0';
 export const UI_CONFIG = {
     panelWidth: 220,
     headerHeight: 56
+};
+
+// Layout modes
+export const LAYOUT_MODES = {
+    FREE_FORM: 'free-form',
+    HIERARCHY: 'hierarchy',
+    RADIAL: 'radial'
+};
+
+// Layout directions (for hierarchy mode)
+export const LAYOUT_DIRECTIONS = {
+    UP: 'up',
+    DOWN: 'down',
+    LEFT: 'left',
+    RIGHT: 'right'
+};
+
+// Layout configuration
+export const LAYOUT_CONFIG = {
+    HIERARCHY: {
+        // Distance from parent to first child
+        INITIAL_OFFSET: {
+            down: { x: 0, y: 120 },
+            up: { x: 0, y: -120 },
+            right: { x: 180, y: 0 },
+            left: { x: -180, y: 0 }
+        },
+        // Spacing between siblings in same direction
+        SIBLING_SPACING: {
+            vertical: 100,   // for up/down
+            horizontal: 180  // for left/right
+        }
+    },
+    RADIAL: {
+        BASE_RADIUS: 150,
+        RADIUS_INCREMENT_PER_4_CHILDREN: 20,
+        MAX_RADIUS: 300,
+        START_ANGLE: -Math.PI / 2  // Start at top (12 o'clock)
+    }
 };
