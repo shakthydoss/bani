@@ -17,7 +17,6 @@ import { ModalManager } from './features/modal-manager.js';
 import { FileManager } from './features/file-manager.js';
 import { ExportManager } from './features/export-manager.js';
 import { StatusBarManager } from './features/status-bar-manager.js';
-import { LayoutManager } from './features/layout-manager.js';
 
 /**
  * Application class
@@ -31,8 +30,7 @@ class BaniApp {
         this.cy = initCytoscape(document.getElementById('cy'));
 
         // Initialize feature managers (order matters for dependencies)
-        this.layoutManager = new LayoutManager(this.cy, state);
-        this.nodeManager = new NodeManager(this.cy, state, this.layoutManager);
+        this.nodeManager = new NodeManager(this.cy, state);
         this.modalManager = new ModalManager(this.cy, this.nodeManager);
         this.panelManager = new PanelManager(this.cy, state, this.nodeManager, this.modalManager);
         this.inlineEditor = new InlineEditor(this.cy);
@@ -44,8 +42,6 @@ class BaniApp {
         // Set up event handlers
         this.setupCytoscapeEvents();
         this.setupCanvasContextMenu();
-        this.setupLayoutSelector();
-        this.setupElectronMenuHandlers();
         this.setupGlobalEvents();
 
         // Create initial node
@@ -65,7 +61,6 @@ class BaniApp {
         window.bani = {
             cy: this.cy,
             state,
-            layoutManager: this.layoutManager,
             nodeManager: this.nodeManager,
             panelManager: this.panelManager,
             fileManager: this.fileManager,
@@ -154,79 +149,6 @@ class BaniApp {
     }
 
     /**
-     * Set up Electron menu handlers for layout modes
-     */
-    setupElectronMenuHandlers() {
-        // Only in Electron mode
-        if (window.electronAPI) {
-            window.electronAPI.onMenuAction((action) => {
-                const layoutModeLabel = document.getElementById('layoutModeLabel');
-
-                switch (action) {
-                    case 'layout-freeform':
-                        this.layoutManager.switchMode('free-form');
-                        layoutModeLabel.textContent = 'Free-Form';
-                        this.panelManager.updateLayoutMode('free-form');
-                        break;
-                    case 'layout-hierarchy':
-                        this.layoutManager.switchMode('hierarchy');
-                        layoutModeLabel.textContent = 'Hierarchy';
-                        this.panelManager.updateLayoutMode('hierarchy');
-                        break;
-                    case 'layout-radial':
-                        this.layoutManager.switchMode('radial');
-                        layoutModeLabel.textContent = 'Radial';
-                        this.panelManager.updateLayoutMode('radial');
-                        break;
-                }
-            });
-        }
-    }
-
-    /**
-     * Set up layout mode selector
-     */
-    setupLayoutSelector() {
-        const layoutBtn = document.getElementById('layoutBtn');
-        const layoutDropdown = document.getElementById('layoutDropdown');
-        const layoutModeLabel = document.getElementById('layoutModeLabel');
-
-        // Toggle dropdown
-        layoutBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            layoutDropdown.classList.toggle('active');
-        });
-
-        // Handle mode selection
-        layoutDropdown.addEventListener('click', (e) => {
-            const option = e.target.closest('.layout-option');
-            if (!option) return;
-
-            const mode = option.dataset.mode;
-            if (mode) {
-                // Update layout manager
-                this.layoutManager.switchMode(mode);
-
-                // Update UI label
-                const modeNames = {
-                    'free-form': 'Free-Form',
-                    'hierarchy': 'Hierarchy',
-                    'radial': 'Radial'
-                };
-                layoutModeLabel.textContent = modeNames[mode];
-
-                // Update panel manager to show/hide directional submenu
-                this.panelManager.updateLayoutMode(mode);
-
-                // Close dropdown
-                layoutDropdown.classList.remove('active');
-
-                console.log(`✓ Switched to ${modeNames[mode]} mode`);
-            }
-        });
-    }
-
-    /**
      * Set up global event handlers
      */
     setupGlobalEvents() {
@@ -234,11 +156,9 @@ class BaniApp {
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.canvas-context-menu') &&
                 !e.target.closest('.export-container') &&
-                !e.target.closest('.layout-container') &&
                 !e.target.closest('#cy')) {
                 this.hideCanvasMenu();
                 document.getElementById('exportDropdown').classList.remove('active');
-                document.getElementById('layoutDropdown').classList.remove('active');
             }
         });
 
@@ -248,37 +168,6 @@ class BaniApp {
                 this.hideCanvasMenu();
                 this.inlineEditor.hide(false);
                 document.getElementById('exportDropdown').classList.remove('active');
-                document.getElementById('layoutDropdown').classList.remove('active');
-            }
-
-            // Keyboard shortcuts for layout modes (Ctrl/Cmd + Shift + 1/2/3)
-            if ((e.ctrlKey || e.metaKey) && e.shiftKey) {
-                const layoutModeLabel = document.getElementById('layoutModeLabel');
-                let mode = null;
-                let modeName = '';
-
-                switch (e.key) {
-                    case '1':
-                        mode = 'free-form';
-                        modeName = 'Free-Form';
-                        break;
-                    case '2':
-                        mode = 'hierarchy';
-                        modeName = 'Hierarchy';
-                        break;
-                    case '3':
-                        mode = 'radial';
-                        modeName = 'Radial';
-                        break;
-                }
-
-                if (mode) {
-                    e.preventDefault();
-                    this.layoutManager.switchMode(mode);
-                    layoutModeLabel.textContent = modeName;
-                    this.panelManager.updateLayoutMode(mode);
-                    console.log(`✓ Switched to ${modeName} mode (keyboard shortcut)`);
-                }
             }
         });
 

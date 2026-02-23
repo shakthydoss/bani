@@ -15,9 +15,7 @@ export const state = {
     currentFilePath: null, // Full path in Electron mode
     hasUnsavedChanges: false,
     // Callback for UI updates when unsaved state changes
-    onUnsavedChange: null,
-    // Layout mode
-    currentLayoutMode: 'free-form'
+    onUnsavedChange: null
 };
 
 /**
@@ -31,7 +29,6 @@ export function initState() {
     state.currentFileName = 'untitled.bani';
     state.currentFilePath = null;
     state.hasUnsavedChanges = false;
-    state.currentLayoutMode = 'free-form';
     return state;
 }
 
@@ -101,17 +98,3 @@ export function setFilePath(filePath) {
     state.currentFilePath = filePath;
 }
 
-/**
- * Get the current layout mode
- */
-export function getLayoutMode() {
-    return state.currentLayoutMode;
-}
-
-/**
- * Set the current layout mode
- */
-export function setLayoutMode(mode) {
-    state.currentLayoutMode = mode;
-    markUnsaved();
-}

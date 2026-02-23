@@ -20,7 +20,6 @@ Whether you're brainstorming a new project, planning a lesson, studying for exam
 - ✨ **Fully Offline** - No internet connection required
 - 💻 **Cross-Platform Desktop App** - Native apps for macOS, Windows, and Linux
 - 🎯 **ES6 Modular Architecture** - Clean, maintainable codebase
-- 📐 **Three Layout Modes** - Free-Form, Hierarchy, and Radial layouts
 - 📝 **Rich Text Nodes** - Support for titles and descriptions
 - 🎨 **Customizable Styling** - Colors, borders, fonts, padding
 - 💾 **Save/Load** - Native file dialogs with `.bani` files (JSON format)
@@ -91,61 +90,6 @@ npm start
 npm run dist
 ```
 
-## Layout Modes
-
-Bani offers three layout modes to help you organize your mind maps:
-
-### 🎨 Free-Form (Default)
-**Perfect for:** Organic brainstorming, freehand mind mapping
-
-- Drag nodes anywhere on the canvas
-- Complete freedom to position and arrange
-- Ideal for creative, non-linear thinking
-
-### 📊 Hierarchy
-**Perfect for:** Organizational charts, decision trees, structured workflows
-
-- Auto-align children in chosen direction (Above/Below/Left/Right)
-- Siblings maintain neat alignment and consistent spacing
-- Structure is locked (dragging disabled) to preserve organization
-- Dragging parent moves entire subtree together
-- Great for creating clean, professional diagrams
-
-**Example:**
-```
-        Manager
-           |
-    ---------------
-    |      |      |
-  Dev    QA    Design
-```
-
-### ⭕ Radial
-**Perfect for:** Central concepts with equal-weight branches, symmetrical relationships
-
-- Children automatically arrange in circle around parent
-- Evenly distributed at all times
-- Adds/removes children triggers auto-redistribution
-- Structure is locked (dragging disabled) to preserve symmetry
-- Ideal for showing connections to a central idea
-
-**Example:**
-```
-       North
-         |
-West - Center - East
-         |
-       South
-```
-
-### Switching Modes
-
-- **Header Dropdown:** Click the layout button in the header toolbar
-- **Keyboard:** `Ctrl/Cmd + Shift + 1/2/3` for Free-Form/Hierarchy/Radial
-- **Electron Menu:** View > Layout Mode
-
-**Note:** Switching modes preserves existing node positions. Only newly added nodes follow the new layout rules.
-
 ## Keyboard Shortcuts
 
 | Shortcut | Action |
@@ -156,9 +100,6 @@ West - Center - East
 | `Ctrl/Cmd + =` | Zoom in |
 | `Ctrl/Cmd + -` | Zoom out |
 | `Ctrl/Cmd + 0` | Fit to screen |
-| `Ctrl/Cmd + Shift + 1` | Switch to Free-Form layout |
-| `Ctrl/Cmd + Shift + 2` | Switch to Hierarchy layout |
-| `Ctrl/Cmd + Shift + 3` | Switch to Radial layout |
 | `Ctrl/Cmd + Enter` | Save description (in modal) |
 | `Double-click node` | Edit node text |
 | `Right-click canvas` | Add node |
@@ -166,7 +107,7 @@ West - Center - East
 | `Escape` | Close modals/menus |
 | `Enter` | Submit inline editor |
 
-Desktop app also includes File and View menus with export options and layout mode selection.
+Desktop app also includes File and View menus with export options.
 
 ## Project Structure
 
@@ -189,7 +130,6 @@ bani/
 │   │   ├── core/              # Core functionality
 │   │   │   └── state.js       # State management
 │   │   ├── features/          # Feature modules
-│   │   │   ├── layout-manager.js    # Layout modes (Free-Form/Hierarchy/Radial)
 │   │   │   ├── node-manager.js      # Node CRUD operations
 │   │   │   ├── panel-manager.js     # Panel interactions
 │   │   │   ├── inline-editor.js     # Inline text editing
@@ -242,7 +182,6 @@ Mind maps are saved as `.bani` files in JSON format:
 {
   "version": "1.0",
   "created": "2025-02-07T...",
-  "layoutMode": "free-form",
   "viewport": {
     "zoom": 1.0,
     "pan": { "x": 0, "y": 0 }
@@ -252,7 +191,6 @@ Mind maps are saved as `.bani` files in JSON format:
       "data": {
         "id": "node_1",
         "label": "My Node",
-        "layoutDirection": "down",
         ...
       },
       "position": { "x": 100, "y": 200 }
@@ -261,12 +199,6 @@ Mind maps are saved as `.bani` files in JSON format:
   "edges": [...]
 }
 ```
-
-**Layout Fields:**
-- `layoutMode`: Current layout mode ("free-form", "hierarchy", or "radial")
-- `layoutDirection`: Direction for hierarchy mode ("up", "down", "left", "right")
-
-**Backward Compatibility:** Files created before layout modes will default to "free-form" mode.
 
 ## Architecture
 

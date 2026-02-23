@@ -17,7 +17,6 @@ export class PanelManager {
         this.addDescBtn = document.getElementById('addDescBtn');
         this.editDescBtn = document.getElementById('editDescBtn');
         this.deleteDescBtn = document.getElementById('deleteDescBtn');
-        this.addChildSubmenu = document.getElementById('addChildSubmenu');
 
         this.setupEventHandlers();
     }
@@ -63,10 +62,8 @@ export class PanelManager {
     handleAction(action, value, node) {
         switch (action) {
             case 'add-child': {
-                // Get direction from data-direction attribute (for hierarchy mode)
-                const direction = value || 'down';
-                const newNode = this.nodeManager.addChild(node, direction);
-                this.enablePanel(newNode);
+                this.nodeManager.addChild(node);
+                this.enablePanel(node);  // Keep focus on parent so repeated clicks add siblings
                 break;
             }
 
@@ -190,22 +187,4 @@ export class PanelManager {
         });
     }
 
-    /**
-     * Update panel based on layout mode
-     */
-    updateLayoutMode(mode) {
-        if (mode === 'hierarchy') {
-            // Show directional submenu in hierarchy mode
-            if (this.addChildSubmenu) {
-                this.addChildSubmenu.style.display = 'block';
-            }
-        } else {
-            // In free-form or radial mode, hide submenu (keep simple button)
-            // Actually, we'll keep the submenu structure but make it work as simple button
-            // by not expanding it automatically
-            if (this.addChildSubmenu) {
-                this.addChildSubmenu.classList.remove('expanded');
-            }
-        }
-    }
 }
