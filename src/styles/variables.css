@@ -11,8 +11,14 @@
     --text-muted: #94a3b8;
     --border-subtle: #e2e8f0;
     --border-light: #f1f5f9;
+    --border-color: #e2e8f0; /* New */
+    --bg-secondary: #f1f5f9; /* New */
     --accent: #3b82f6;
     --accent-hover: #2563eb;
+    --danger: #ef4444;       /* New */
+    --danger-bg: #fef2f2;    /* New */
+    --orange: #f59e0b;       /* New */
+    --purple: #8b5cf6;       /* New */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
     --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -37,4 +43,38 @@
 
     /* Spacing */
     --header-height: 56px;
+}
+
+/* ============================================
+   DARK THEME OVERRIDES
+   ============================================ */
+body.dark-theme {
+    --bg-primary: #0f172a;
+    --bg-canvas: #1e293b;
+    --bg-header: rgba(15, 23, 42, 0.85);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --border-subtle: #334155;
+    --border-light: #1e293b;
+    --border-color: #334155; /* New */
+    --bg-secondary: #0f172a; /* New */
+
+    /* Adjust shadows for dark mode */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+    --danger-bg: rgba(239, 68, 68, 0.1); /* New */
+
+    /* Adjust node colors for dark mode contrast */
+    --node-yellow: #451a03; /* Darker amber */
+    --node-red: #450a0a;    /* Darker red */
+    --node-blue: #1e3a8a;   /* Darker blue */
+    --node-green: #064e3b;  /* Darker green */
+    --node-white: #1e293b;  /* Same as canvas */
+
+    /* Adjust node border colors for dark mode */
+    --border-black: #f8fafc; /* Light border in dark mode */
+    --border-white: #334155; /* Subtle border */
 }

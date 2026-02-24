@@ -72,6 +72,15 @@
     stroke: currentColor;
 }
 
+/* Theme toggle visibility */
+body.dark-theme .theme-sun {
+    display: block !important;
+}
+
+body.dark-theme .theme-moon {
+    display: none !important;
+}
+
 .header-divider {
     width: 1px;
     height: 24px;

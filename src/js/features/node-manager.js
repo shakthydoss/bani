@@ -18,13 +18,22 @@ export class NodeManager {
      */
     createNode(x, y, label = DEFAULT_NODE.label, parentId = null) {
         const nodeId = getNextNodeId();
+        const isDark = document.body.classList.contains('dark-theme');
+
+        // Adjust defaults for dark mode
+        const themeDefaults = {
+            ...DEFAULT_NODE,
+            bgColor: isDark ? '#1e293b' : DEFAULT_NODE.bgColor,
+            borderColor: isDark ? '#f8fafc' : DEFAULT_NODE.borderColor,
+            textColor: isDark ? '#f8fafc' : DEFAULT_NODE.textColor
+        };
 
         const node = this.cy.add({
             group: 'nodes',
             data: {
                 id: nodeId,
                 label: label,
-                ...DEFAULT_NODE,
+                ...themeDefaults,
                 parentNodeId: parentId
             },
             position: { x, y }

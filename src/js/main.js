@@ -17,6 +17,7 @@ import { ModalManager } from './features/modal-manager.js';
 import { FileManager } from './features/file-manager.js';
 import { ExportManager } from './features/export-manager.js';
 import { StatusBarManager } from './features/status-bar-manager.js';
+import { ThemeManager } from './features/theme-manager.js';
 
 /**
  * Application class
@@ -30,6 +31,7 @@ class BaniApp {
         this.cy = initCytoscape(document.getElementById('cy'));
 
         // Initialize feature managers (order matters for dependencies)
+        this.themeManager = new ThemeManager(this.cy);
         this.nodeManager = new NodeManager(this.cy, state);
         this.modalManager = new ModalManager(this.cy, this.nodeManager);
         this.panelManager = new PanelManager(this.cy, state, this.nodeManager, this.modalManager);

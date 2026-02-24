@@ -10,6 +10,9 @@ import { CYTOSCAPE_CONFIG } from './constants.js';
  * Get Cytoscape style configuration
  */
 export function getCytoscapeStyles() {
+    const currentTheme = localStorage.getItem('bani-theme') || 'light';
+    const isDark = currentTheme === 'dark';
+
     return [
         {
             selector: 'node',
@@ -49,14 +52,14 @@ export function getCytoscapeStyles() {
             style: {
                 'border-color': '#3b82f6',
                 'border-width': 1.5,
-                'box-shadow': '0 0 0 4px rgba(59, 130, 246, 0.2)'
+                'box-shadow': isDark ? '0 0 0 4px rgba(59, 130, 246, 0.4)' : '0 0 0 4px rgba(59, 130, 246, 0.2)'
             }
         },
         {
             selector: 'edge',
             style: {
                 'width': 1,
-                'line-color': '#1a1a2e',
+                'line-color': isDark ? '#94a3b8' : '#1a1a2e',
                 'curve-style': 'bezier',
                 'target-arrow-shape': 'none',
                 'source-arrow-shape': 'none'

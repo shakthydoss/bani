@@ -85,11 +85,11 @@
 }
 
 .panel-item.danger {
-    color: #ef4444;
+    color: var(--danger);
 }
 
 .panel-item.danger:hover {
-    background: #fef2f2;
+    background: var(--danger-bg);
 }
 
 .panel-item svg {
@@ -153,5 +153,5 @@
 .color-swatch.green { background: var(--node-green); }
 .color-swatch.white { background: var(--node-white); }
 .color-swatch.black { background: var(--border-black); }
-.color-swatch.purple { background: #8b5cf6; }
-.color-swatch.orange { background: #f97316; }
+.color-swatch.purple { background: var(--purple); }
+.color-swatch.orange { background: var(--orange); }
