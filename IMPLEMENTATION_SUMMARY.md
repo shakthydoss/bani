@@ -7,12 +7,12 @@ Successfully transformed Bani from a browser-based app into a **cross-platform d
 ## Files Created
 
 ### Electron Infrastructure (3 files)
-- `electron/main.js` (258 lines) - Main process with IPC handlers
-- `electron/preload.js` (57 lines) - Secure IPC bridge via contextBridge
-- `electron/menu.js` (196 lines) - Application menus (File/Edit/View/Window/Help)
+- `electron/main.js` - Main process with IPC handlers
+- `electron/preload.js` - Secure IPC bridge via contextBridge
+- `electron/menu.js` - Application menus (File/Edit/View/Window/Help)
 
 ### Adapter Layer (1 file)
-- `electron-adapter/file-adapter.js` (286 lines) - File operations abstraction for dual-mode support
+- `electron-adapter/file-adapter.js` - File operations abstraction for dual-mode support
 
 ### Build Resources (4 files)
 - `build/icons/icon.icns` (1.2MB) - macOS icon
@@ -25,10 +25,14 @@ Successfully transformed Bani from a browser-based app into a **cross-platform d
 
 ## Files Modified
 
-### Feature Modules (3 files)
+### Feature Modules (4 files)
 - `src/js/features/file-manager.js` - Updated to use FileAdapter, added menu event handlers
 - `src/js/features/export-manager.js` - Updated to use FileAdapter for PNG/PDF export
 - `src/js/features/zoom-manager.js` - Added Electron menu event handlers
+- `src/js/features/status-bar-manager.js` - **NEW** module added in modular refactor; handles status bar showing current filename and unsaved changes indicator
+
+### App Bootstrapper (1 file)
+- `src/js/main.js` - Reorganized into modular `BaniApp` class during architecture refactor
 
 ### Documentation (2 files)
 - `README.md` - Added desktop installation instructions, updated architecture section
@@ -50,6 +54,10 @@ Successfully transformed Bani from a browser-based app into a **cross-platform d
 - **Keyboard Shortcuts**: All shortcuts work via menu accelerators
 - **Native Alerts**: OS-native confirmation and message dialogs
 - **Application Icon**: Custom icon in title bar, dock/taskbar, and launchers
+
+### ✅ Status Bar
+- **Filename Display**: Bottom bar shows current open file name
+- **Unsaved Changes Indicator**: Dot indicator reflects unsaved state via `StatusBarManager`
 
 ### ✅ Dual-Mode Support
 - **Browser Version**: Still works perfectly (bani.html + src/index.html)
@@ -152,7 +160,7 @@ python3 -m http.server 8000
 
 ## Architecture Benefits
 
-1. **Minimal Code Changes**: Only 3 feature modules modified, rest untouched
+1. **Minimal Code Changes**: Core feature modules updated; additional modules added during modular refactor
 2. **Clean Separation**: Electron code isolated in `electron/` directory
 3. **Backward Compatible**: Browser version fully functional
 4. **Type-Safe IPC**: All IPC channels defined in preload script
@@ -177,5 +185,3 @@ Successfully implemented Electron desktop app integration while:
 - ✅ Creating native installers for all major platforms
 - ✅ Enhancing user experience with native dialogs and menus
 - ✅ Keeping codebase clean and maintainable
-
-Total time: ~6 hours for full implementation, testing, and documentation.

@@ -66,3 +66,6 @@ coverage/
 # Claude Code scratch
 .claude/
 CLAUDE.md
+
+#Gemini
+GEMINI.md
