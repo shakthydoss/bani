@@ -8,7 +8,6 @@
 export const state = {
     nodeIdCounter: 0,
     selectedNode: null,
-    contextMenuTarget: null,
     lastClickPosition: { x: 0, y: 0 },
     // File tracking
     currentFileName: 'untitled.bani',
@@ -24,7 +23,6 @@ export const state = {
 export function initState() {
     state.nodeIdCounter = 0;
     state.selectedNode = null;
-    state.contextMenuTarget = null;
     state.lastClickPosition = { x: 0, y: 0 };
     state.currentFileName = 'untitled.bani';
     state.currentFilePath = null;
@@ -37,20 +35,6 @@ export function initState() {
  */
 export function updateClickPosition(x, y) {
     state.lastClickPosition = { x, y };
-}
-
-/**
- * Set selected node
- */
-export function setSelectedNode(node) {
-    state.selectedNode = node;
-}
-
-/**
- * Clear selected node
- */
-export function clearSelectedNode() {
-    state.selectedNode = null;
 }
 
 /**

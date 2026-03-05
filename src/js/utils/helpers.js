@@ -19,15 +19,3 @@ export function hideAllMenus() {
 export function getTimestamp() {
     return new Date().toISOString().slice(0, 10);
 }
-
-/**
- * Create a download link and trigger download
- */
-export function downloadFile(blob, filename) {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    URL.revokeObjectURL(url);
-}

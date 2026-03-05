@@ -28,6 +28,8 @@ Whether you're brainstorming a new project, planning a lesson, studying for exam
 - 🖱️ **Intuitive UI** - Click, double-click, right-click interactions
 - 🔍 **Zoom Controls** - Pan and zoom your mind maps
 - 🌐 **Browser Support** - Also works directly in browser (no installation needed)
+- 📐 **Orthogonal Edge Routing** - Edges always connect to face centers and route at clean 0°/90°/180°/270° angles, updating live as nodes are dragged
+- ✦ **Child Node Highlight** - New child nodes and their edges flash blue on creation, making it easy to spot what was just added
 
 ## Who is Bani for?
 

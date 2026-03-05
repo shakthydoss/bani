@@ -14,26 +14,73 @@ export class NodeManager {
     }
 
     /**
+     * Check whether a candidate position is free from nearby nodes.
+     */
+    isPositionFree(x, y, minDistance = 120) {
+        return this.cy.nodes().every((node) => {
+            const pos = node.position();
+            const dx = pos.x - x;
+            const dy = pos.y - y;
+            return Math.hypot(dx, dy) >= minDistance;
+        });
+    }
+
+    /**
+     * Find a nearby free position around a preferred coordinate.
+     */
+    findNearestFreePosition(preferredX, preferredY, step = 110, maxRings = 8) {
+        if (this.isPositionFree(preferredX, preferredY)) {
+            return { x: preferredX, y: preferredY };
+        }
+
+        // Spiral-like ring scan around preferred position.
+        for (let ring = 1; ring <= maxRings; ring++) {
+            for (let gx = -ring; gx <= ring; gx++) {
+                for (let gy = -ring; gy <= ring; gy++) {
+                    if (Math.max(Math.abs(gx), Math.abs(gy)) !== ring) continue;
+
+                    const x = preferredX + gx * step;
+                    const y = preferredY + gy * step;
+                    if (this.isPositionFree(x, y)) {
+                        return { x, y };
+                    }
+                }
+            }
+        }
+
+        // Fallback if map is dense: push further down-right.
+        return {
+            x: preferredX + step * (maxRings + 1),
+            y: preferredY + step * (maxRings + 1)
+        };
+    }
+
+    /**
+     * Create edge between two nodes.
+     */
+    createEdge(sourceId, targetId) {
+        return this.cy.add({
+            group: 'edges',
+            data: {
+                id: `edge_${sourceId}_${targetId}`,
+                source: sourceId,
+                target: targetId
+            }
+        });
+    }
+
+    /**
      * Create a new node with default styling
      */
     createNode(x, y, label = DEFAULT_NODE.label, parentId = null) {
         const nodeId = getNextNodeId();
-        const isDark = document.body.classList.contains('dark-theme');
-
-        // Adjust defaults for dark mode
-        const themeDefaults = {
-            ...DEFAULT_NODE,
-            bgColor: isDark ? '#1e293b' : DEFAULT_NODE.bgColor,
-            borderColor: isDark ? '#f8fafc' : DEFAULT_NODE.borderColor,
-            textColor: isDark ? '#f8fafc' : DEFAULT_NODE.textColor
-        };
 
         const node = this.cy.add({
             group: 'nodes',
             data: {
                 id: nodeId,
                 label: label,
-                ...themeDefaults,
+                ...DEFAULT_NODE,
                 parentNodeId: parentId
             },
             position: { x, y }
@@ -41,14 +88,7 @@ export class NodeManager {
 
         // If there's a parent, create an edge
         if (parentId) {
-            this.cy.add({
-                group: 'edges',
-                data: {
-                    id: `edge_${parentId}_${nodeId}`,
-                    source: parentId,
-                    target: nodeId
-                }
-            });
+            this.createEdge(parentId, nodeId);
         }
 
         // Mark as unsaved
@@ -58,16 +98,37 @@ export class NodeManager {
     }
 
     /**
+     * Flash a new child node and its connecting edge, then fade back.
+     */
+    flashNewChild(childNode) {
+        const edge = childNode.connectedEdges();
+        childNode.addClass('flash-new');
+        edge.addClass('flash-new');
+
+        setTimeout(() => {
+            childNode.removeClass('flash-new');
+            edge.removeClass('flash-new');
+        }, 1200);
+    }
+
+    /**
      * Add a child node to the selected node
      */
     addChild(node) {
         const pos = node.position();
-        return this.createNode(
-            pos.x,
-            pos.y + NODE_OFFSETS.CHILD_Y,
+        const preferredX = pos.x;
+        const preferredY = pos.y + NODE_OFFSETS.CHILD_Y;
+        const freePos = this.findNearestFreePosition(preferredX, preferredY);
+
+        const childNode = this.createNode(
+            freePos.x,
+            freePos.y,
             'Child Node',
             node.id()
         );
+
+        this.flashNewChild(childNode);
+        return childNode;
     }
 
     /**
@@ -76,9 +137,10 @@ export class NodeManager {
     addSibling(node) {
         const pos = node.position();
         const parentId = node.data('parentNodeId');
+        const freePos = this.findNearestFreePosition(pos.x + NODE_OFFSETS.SIBLING_X, pos.y);
         return this.createNode(
-            pos.x + NODE_OFFSETS.SIBLING_X,
-            pos.y,
+            freePos.x,
+            freePos.y,
             'Sibling Node',
             parentId
         );
@@ -89,21 +151,15 @@ export class NodeManager {
      */
     addParent(node) {
         const pos = node.position();
+        const freePos = this.findNearestFreePosition(pos.x, pos.y + NODE_OFFSETS.PARENT_Y);
         const newParent = this.createNode(
-            pos.x,
-            pos.y + NODE_OFFSETS.PARENT_Y,
+            freePos.x,
+            freePos.y,
             'Parent Node'
         );
 
         // Create edge from new parent to current node
-        this.cy.add({
-            group: 'edges',
-            data: {
-                id: `edge_${newParent.id()}_${node.id()}`,
-                source: newParent.id(),
-                target: node.id()
-            }
-        });
+        this.createEdge(newParent.id(), node.id());
 
         node.data('parentNodeId', newParent.id());
         return newParent;

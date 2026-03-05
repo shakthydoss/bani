@@ -5,7 +5,6 @@
  */
 
 import { FILE_VERSION, UI_CONFIG } from '../config/constants.js';
-import { getTimestamp } from '../utils/helpers.js';
 import { FileAdapter } from '../../../electron-adapter/file-adapter.js';
 import { markSaved, markUnsaved, setFileName, setFilePath } from '../core/state.js';
 

@@ -10,9 +10,6 @@ import { CYTOSCAPE_CONFIG } from './constants.js';
  * Get Cytoscape style configuration
  */
 export function getCytoscapeStyles() {
-    const currentTheme = localStorage.getItem('bani-theme') || 'light';
-    const isDark = currentTheme === 'dark';
-
     return [
         {
             selector: 'node',
@@ -44,25 +41,46 @@ export function getCytoscapeStyles() {
                 'border-style': 'data(borderStyle)',
 
                 // Corner radius
-                'corner-radius': '8px'
+                'corner-radius': '8px',
+
+                // Transitions for flash effect
+                'transition-property': 'border-color, border-width, background-color',
+                'transition-duration': '0.6s'
             }
         },
         {
             selector: 'node:selected',
             style: {
                 'border-color': '#3b82f6',
-                'border-width': 1.5,
-                'box-shadow': isDark ? '0 0 0 4px rgba(59, 130, 246, 0.4)' : '0 0 0 4px rgba(59, 130, 246, 0.2)'
+                'border-width': 1.5
             }
         },
         {
             selector: 'edge',
             style: {
                 'width': 1,
-                'line-color': isDark ? '#94a3b8' : '#1a1a2e',
-                'curve-style': 'bezier',
+                'line-color': '#1a1a2e',
+                'curve-style': 'taxi',
+                'taxi-direction': 'auto',
                 'target-arrow-shape': 'none',
-                'source-arrow-shape': 'none'
+                'source-arrow-shape': 'none',
+                'transition-property': 'line-color, width',
+                'transition-duration': '0.6s'
+            }
+        },
+        {
+            selector: 'node.flash-new',
+            style: {
+                'border-color': '#3b82f6',
+                'border-width': 2.5,
+                'background-color': '#dbeafe'
+            }
+        },
+        {
+            selector: 'edge.flash-new',
+            style: {
+                'line-color': '#3b82f6',
+                'width': 2
             }
         }
     ];
