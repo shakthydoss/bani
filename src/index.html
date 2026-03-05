@@ -425,10 +425,26 @@
     </div>
 
     <!-- ============================================
-         HELPER TEXT
+         HELP CONTROLS
          ============================================ -->
-    <div class="helper-text">
-        <kbd>Ctrl+S</kbd> save • <kbd>Ctrl+O</kbd> open • <kbd>Double-click</kbd> edit • <kbd>Right-click</kbd> add
+    <div class="info-controls">
+        <button class="info-btn" id="infoBtn" title="Help" aria-label="Open help" aria-expanded="false" aria-controls="helpPopover">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/>
+                <line x1="12" y1="10" x2="12" y2="16"/>
+                <circle cx="12" cy="7" r="1"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="help-popover" id="helpPopover" role="dialog" aria-label="Help">
+        <div class="help-popover-title">Help</div>
+        <ul class="help-list">
+            <li><kbd>Ctrl+S</kbd> saves the current mind map to file.</li>
+            <li><kbd>Ctrl+O</kbd> opens a <code>.bani</code> file.</li>
+            <li>Double-click a node to edit it.</li>
+            <li>Right-click the canvas area to add a node.</li>
+        </ul>
     </div>
 
     <!-- ============================================

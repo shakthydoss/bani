@@ -42,6 +42,7 @@ class BaniApp {
         // Set up event handlers
         this.setupCytoscapeEvents();
         this.setupCanvasContextMenu();
+        this.setupHelpPopover();
         this.setupGlobalEvents();
 
         // Create initial node
@@ -152,13 +153,20 @@ class BaniApp {
      * Set up global event handlers
      */
     setupGlobalEvents() {
-        // Close context menu on click outside
+        // Close menus/popovers on click outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.canvas-context-menu') &&
-                !e.target.closest('.export-container') &&
                 !e.target.closest('#cy')) {
                 this.hideCanvasMenu();
+            }
+
+            if (!e.target.closest('.export-container')) {
                 document.getElementById('exportDropdown').classList.remove('active');
+            }
+
+            if (!e.target.closest('.info-controls') &&
+                !e.target.closest('.help-popover')) {
+                this.hideHelpPopover();
             }
         });
 
@@ -168,12 +176,29 @@ class BaniApp {
                 this.hideCanvasMenu();
                 this.inlineEditor.hide(false);
                 document.getElementById('exportDropdown').classList.remove('active');
+                this.hideHelpPopover();
             }
         });
 
         // Window resize
         window.addEventListener('resize', () => {
             this.cy.resize();
+        });
+    }
+
+    /**
+     * Set up help popover interactions
+     */
+    setupHelpPopover() {
+        this.infoBtn = document.getElementById('infoBtn');
+        this.helpPopover = document.getElementById('helpPopover');
+
+        if (!this.infoBtn || !this.helpPopover) return;
+
+        this.infoBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.helpPopover.classList.toggle('active');
+            this.infoBtn.setAttribute('aria-expanded', this.helpPopover.classList.contains('active'));
         });
     }
 
@@ -192,6 +217,15 @@ class BaniApp {
      */
     hideCanvasMenu() {
         document.getElementById('canvasContextMenu').classList.remove('active');
+    }
+
+    /**
+     * Hide help popover
+     */
+    hideHelpPopover() {
+        if (!this.helpPopover || !this.infoBtn) return;
+        this.helpPopover.classList.remove('active');
+        this.infoBtn.setAttribute('aria-expanded', 'false');
     }
 }
 
