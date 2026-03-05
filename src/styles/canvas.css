@@ -6,15 +6,17 @@
     height: 100%;
 }
 
-/* Subtle grid pattern for canvas */
+
+/* Grid pattern for canvas */
 .canvas-container::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image:
-        radial-gradient(circle, var(--border-subtle) 1px, transparent 1px);
-    background-size: 24px 24px;
-    opacity: 0.5;
+        linear-gradient(var(--border-subtle) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+    background-size: 10px 10px;
+    opacity: 0.6;
     pointer-events: none;
     z-index: 0;
 }

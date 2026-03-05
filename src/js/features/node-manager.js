@@ -7,6 +7,19 @@
 import { getNextNodeId, markUnsaved } from '../core/state.js';
 import { DEFAULT_NODE, NODE_OFFSETS } from '../config/constants.js';
 
+export function snapNodeToGrid(node) {
+    node.removeStyle('width');
+    node.removeStyle('height');
+    const w = Math.ceil(node.width() / 20) * 20;
+    const h = Math.ceil(node.height() / 20) * 20;
+    node.style({ width: w, height: h });
+    const pos = node.position();
+    node.position({
+        x: Math.round((pos.x - w / 2) / 10) * 10 + w / 2,
+        y: Math.round((pos.y - h / 2) / 10) * 10 + h / 2
+    });
+}
+
 export class NodeManager {
     constructor(cy, state) {
         this.cy = cy;
@@ -85,6 +98,8 @@ export class NodeManager {
             },
             position: { x, y }
         });
+
+        snapNodeToGrid(node);
 
         // If there's a parent, create an edge
         if (parentId) {
@@ -187,6 +202,7 @@ export class NodeManager {
         }
 
         markUnsaved();
+        snapNodeToGrid(node);
     }
 
     /**

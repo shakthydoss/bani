@@ -62,6 +62,12 @@
     box-shadow: var(--shadow-sm);
 }
 
+.header-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+}
+
 .header-btn svg {
     width: 16px;
     height: 16px;

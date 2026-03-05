@@ -9,7 +9,7 @@ import { state, initState, updateClickPosition, markSaved, markUnsaved } from '.
 import { initCytoscape } from './config/cytoscape-config.js';
 
 // Feature modules
-import { NodeManager } from './features/node-manager.js';
+import { NodeManager, snapNodeToGrid } from './features/node-manager.js';
 import { PanelManager } from './features/panel-manager.js';
 import { ZoomManager } from './features/zoom-manager.js';
 import { InlineEditor } from './features/inline-editor.js';
@@ -122,7 +122,8 @@ class BaniApp {
         });
 
         // Track node position changes (drag)
-        this.cy.on('dragfree', 'node', () => {
+        this.cy.on('dragfree', 'node', (e) => {
+            snapNodeToGrid(e.target);
             markUnsaved();
         });
 
@@ -202,7 +203,7 @@ class BaniApp {
         });
     }
 
-    /**
+/**
      * Show canvas context menu at position
      */
     showCanvasMenu(x, y) {

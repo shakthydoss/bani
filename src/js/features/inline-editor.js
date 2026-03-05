@@ -5,6 +5,7 @@
  */
 
 import { markUnsaved } from '../core/state.js';
+import { snapNodeToGrid } from './node-manager.js';
 
 export class InlineEditor {
     constructor(cy) {
@@ -79,6 +80,7 @@ export class InlineEditor {
 
             if (newLabel !== oldLabel) {
                 this.editingNode.data('label', newLabel);
+                snapNodeToGrid(this.editingNode);
                 markUnsaved();
             }
         }

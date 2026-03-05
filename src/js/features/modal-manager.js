@@ -5,6 +5,7 @@
  */
 
 import { markUnsaved } from '../core/state.js';
+import { snapNodeToGrid } from './node-manager.js';
 
 export class ModalManager {
     constructor(cy, nodeManager) {
@@ -114,6 +115,7 @@ export class ModalManager {
             this.descriptionNode.data('label', title);
             this.descriptionNode.data('title', '');
             this.descriptionNode.data('description', '');
+            snapNodeToGrid(this.descriptionNode);
             markUnsaved();
         }
 
