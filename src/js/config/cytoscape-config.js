@@ -9,13 +9,16 @@ import { CYTOSCAPE_CONFIG } from './constants.js';
 /**
  * Get Cytoscape style configuration
  */
-export function getCytoscapeStyles() {
+export function getCytoscapeStyles(isDark = false) {
+    const edgeColor = isDark ? '#e2e8f0' : '#1a1a2e';
+    const flashBg = isDark ? '#1e3a5f' : '#dbeafe';
+
     return [
         {
             selector: 'node',
             style: {
                 // Shape and size
-                'shape': 'round-rectangle',
+                'shape': 'rectangle',
                 'width': 'label',
                 'height': 'label',
                 'padding': 'data(padding)',
@@ -40,8 +43,8 @@ export function getCytoscapeStyles() {
                 'border-color': 'data(borderColor)',
                 'border-style': 'data(borderStyle)',
 
-                // Corner radius
-                'corner-radius': '8px',
+                // Corner radius (square corners)
+                'corner-radius': '0px',
 
                 // Transitions for flash effect
                 'transition-property': 'border-color, border-width, background-color',
@@ -59,9 +62,13 @@ export function getCytoscapeStyles() {
             selector: 'edge',
             style: {
                 'width': 1,
-                'line-color': '#1a1a2e',
+                'line-color': edgeColor,
                 'curve-style': 'taxi',
                 'taxi-direction': 'auto',
+                // Keep orthogonal turns sharp and aligned
+                'taxi-radius': 0,
+                'taxi-padding': 0,
+                'taxi-turn-min-distance': 0,
                 'target-arrow-shape': 'none',
                 'source-arrow-shape': 'none',
                 'transition-property': 'line-color, width',
@@ -73,7 +80,7 @@ export function getCytoscapeStyles() {
             style: {
                 'border-color': '#3b82f6',
                 'border-width': 2.5,
-                'background-color': '#dbeafe'
+                'background-color': flashBg
             }
         },
         {

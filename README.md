@@ -30,6 +30,8 @@ Whether you're brainstorming a new project, planning a lesson, studying for exam
 - 🌐 **Browser Support** - Also works directly in browser (no installation needed)
 - 📐 **Orthogonal Edge Routing** - Edges always connect to face centers and route at clean 0°/90°/180°/270° angles, updating live as nodes are dragged
 - ✦ **Child Node Highlight** - New child nodes and their edges flash blue on creation, making it easy to spot what was just added
+- 🌙 **Dark Mode** - Toggle between light and dark themes
+- 📏 **Grid Background** - Canvas grid for visual alignment
 
 ## Who is Bani for?
 
@@ -85,8 +87,11 @@ open http://localhost:8000/src/index.html
 # Install dependencies
 npm install
 
-# Run in development mode
+# Run in production mode
 npm start
+
+# Run in development mode (with DevTools logging)
+npm run dev
 
 # Build for all platforms
 npm run dist
@@ -138,7 +143,8 @@ bani/
 │   │   │   ├── modal-manager.js     # Description modal
 │   │   │   ├── file-manager.js      # Save/Load functionality
 │   │   │   ├── export-manager.js    # PNG/PDF export
-│   │   │   └── zoom-manager.js      # Zoom controls
+│   │   │   ├── zoom-manager.js      # Zoom controls
+│   │   │   └── status-bar-manager.js  # Status bar display
 │   │   └── utils/             # Utility functions
 │   │       └── helpers.js
 │   ├── lib/                   # External libraries (local)

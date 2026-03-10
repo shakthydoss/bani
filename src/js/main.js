@@ -17,6 +17,7 @@ import { ModalManager } from './features/modal-manager.js';
 import { FileManager } from './features/file-manager.js';
 import { ExportManager } from './features/export-manager.js';
 import { StatusBarManager } from './features/status-bar-manager.js';
+import { ThemeManager } from './features/theme-manager.js';
 
 /**
  * Application class
@@ -38,6 +39,7 @@ class BaniApp {
         this.fileManager = new FileManager(this.cy, state, this.nodeManager, this.panelManager, this.statusBarManager);
         this.exportManager = new ExportManager(this.cy);
         this.zoomManager = new ZoomManager(this.cy);
+        this.themeManager = new ThemeManager(this.cy);
 
         // Set up event handlers
         this.setupCytoscapeEvents();
@@ -66,7 +68,8 @@ class BaniApp {
             panelManager: this.panelManager,
             fileManager: this.fileManager,
             exportManager: this.exportManager,
-            zoomManager: this.zoomManager
+            zoomManager: this.zoomManager,
+            themeManager: this.themeManager
         };
 
         console.log('✨ Bani initialized successfully!');

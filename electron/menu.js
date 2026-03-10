@@ -129,6 +129,14 @@ function buildMenu(mainWindow) {
           }
         },
         { type: 'separator' },
+        {
+          label: 'Toggle Dark Mode',
+          accelerator: 'CmdOrCtrl+Shift+D',
+          click: () => {
+            mainWindow.webContents.send('menu:action', 'toggle-dark-mode');
+          }
+        },
+        { type: 'separator' },
         { role: 'reload' },
         { role: 'forceReload' },
         { role: 'toggleDevTools' },

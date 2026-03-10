@@ -69,4 +69,5 @@ export class ZoomManager {
             this.cy.fit(this.cy.elements(), 50);
         }
     }
+
 }
